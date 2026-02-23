@@ -105,21 +105,42 @@
             list-style: none;
         }
 
+        /* 每个列表项使用 flex 布局，图标与文字同一列开始 */
         .sidebar .links li {
             margin-bottom: 0.6rem;
             font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
         }
 
+        /* 链接内部也使用 inline-flex，保持可点击区域与排版一致 */
         .sidebar .links a {
             color: #333;
             text-decoration: none;
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 0.5rem;
         }
 
         .sidebar .links a:hover {
             color: #0066cc;
+        }
+
+        /* 使侧边栏图标保持固定宽度，保证所有行的文字在同一垂直列对齐 */
+        .sidebar .links i {
+            display: inline-block;
+            width: 22px;
+            flex: 0 0 22px;
+            text-align: center;
+        }
+
+        /* 移动端恢复图标自适应宽度，避免拥挤 */
+        @media (max-width: 768px) {
+            .sidebar .links i {
+                width: auto;
+                flex: none;
+            }
         }
 
         /* 右侧内容区 - 正常滚动 */
