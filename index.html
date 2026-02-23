@@ -1,0 +1,590 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yufeng Wang - Homepage</title>
+    <link rel="icon" href="favicon.svg" type="image/svg+xml">
+    <style>
+        /* 全局样式重置 */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            /* 解决固定导航导致的锚点跳转遮挡问题 */
+            scroll-padding-top: 80px;
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: #ffffff;
+            color: #333333;
+            line-height: 1.6;
+            /* 给固定导航留出顶部空间 */
+            padding-top: 80px;
+        }
+
+        /* 导航栏 - 永久固定在顶部 */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            /* border-bottom: 1px solid #eee;*/
+            padding: 1.2rem 0;
+            background-color: #ffffff;
+            z-index: 999;
+        }
+
+        nav ul {
+            list-style: none;
+            display: flex;
+            gap: 2rem;
+            padding: 0 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+            flex-wrap: wrap;
+        }
+
+        nav a {
+            text-decoration: none;
+            color: #666;
+            font-size: 0.95rem;
+        }
+
+        nav a:hover {
+            color: #000;
+        }
+
+        /* 主容器 - 左侧固定个人信息，右侧滚动内容 */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            gap: 3rem;
+        }
+
+        /* 左侧个人信息栏 - 固定定位，滚动不消失 */
+        .sidebar {
+            width: 220px;
+            flex-shrink: 0;
+            /* 固定在左侧，距离顶部80px（和导航栏高度一致） */
+            position: sticky;
+            top: 100px;
+            height: fit-content;
+        }
+
+        .profile-img {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-bottom: 1.5rem;
+            border: 1px solid #eee;
+        }
+
+        .sidebar h1 {
+            font-size: 1.4rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            line-height: 1.3;
+        }
+
+        .sidebar .tagline {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar .links {
+            list-style: none;
+        }
+
+        .sidebar .links li {
+            margin-bottom: 0.6rem;
+            font-size: 0.9rem;
+        }
+
+        .sidebar .links a {
+            color: #333;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .sidebar .links a:hover {
+            color: #0066cc;
+        }
+
+        /* 右侧内容区 - 正常滚动 */
+        .content {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .content p {
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+
+        .content a {
+            color: #0066cc;
+            text-decoration: none;
+        }
+
+        .content a:hover {
+            text-decoration: underline;
+        }
+
+        .content h2 {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin: 2rem 0 1rem 0;
+            padding-bottom: 0.3rem;
+            border-bottom: 1px solid #eee;
+        }
+
+        .news-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .news-list li {
+            margin-bottom: 0.6rem;
+            font-size: 0.9rem;
+        }
+
+        /* 新闻展开收起按钮样式 - 极简风格 */
+        #toggle-news-btn {
+            background: none;
+            border: none;
+            color: #0066cc;
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 0.2rem 0;
+            margin-top: 0.5rem;
+            font-family: inherit;
+        }
+
+        #toggle-news-btn:hover {
+            text-decoration: underline;
+        }
+
+        /* 额外新闻默认隐藏 */
+        #extra-news {
+            display: none;
+        }
+
+        /* 额外奖项默认隐藏 */
+        #extra-honors {
+            display: none;
+        }
+
+        /* 展开/收起按钮样式 - 极简风格 */
+        #toggle-honors-btn {
+            background: none;
+            border: none;
+            color: #0066cc;
+            font-size: 0.9rem;
+            cursor: pointer;
+            padding: 0.2rem 0;
+            margin-top: 0.5rem;
+            font-family: inherit;
+        }
+
+        #toggle-honors-btn:hover {
+            text-decoration: underline;
+        }
+
+        /* 通用列表样式（荣誉/教育/实习通用） */
+        .info-list {
+            list-style: none;
+            margin-top: 1rem;
+        }
+
+        .info-list li {
+            margin-bottom: 0.8rem;
+            font-size: 0.9rem;
+        }
+
+        /* 论文样式 */
+        .publication-item {
+            margin-bottom: 2.5rem;
+            display: flex;
+            gap: 2rem;
+            align-items: flex-start;
+            /*padding-bottom: 1.5rem;*/
+            /*border-bottom: 1px solid #eee;*/
+        }
+
+        .publication-img {
+            width: 280px;
+            height: auto;
+            border: 1px solid #eee;
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .publication-content {
+            flex: 1;
+        }
+
+        .publication-title {
+            font-weight: 600;
+            font-size: 1.1rem;
+            color: #0066cc;
+            margin-bottom: 0.5rem;
+            line-height: 1.4;
+        }
+
+        .publication-authors {
+            font-size: 0.9rem;
+            color: #333;
+            margin-bottom: 0.4rem;
+        }
+
+        .publication-journal {
+            font-size: 0.9rem;
+            color: #0070c0;
+            font-style: italic;
+            margin-bottom: 0.8rem;
+        }
+
+        .publication-abstract {
+            font-size: 0.9rem;
+            color: #555;
+            margin-bottom: 1rem;
+            line-height: 1.5;
+        }
+
+        .publication-tags {
+            display: flex;
+            gap: 0.8rem;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .publication-tag {
+            background-color: #0066cc;
+            color: white;
+            padding: 0.2rem 0.8rem;
+            border-radius: 4px;
+            font-size: 0.8rem;
+        }
+
+        .publication-tag.alt {
+            background-color: #f0f0f0;
+            color: #333;
+            border: 1px solid #ddd;
+        }
+
+        .publication-links {
+            display: flex;
+            gap: 1rem;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .publication-links a {
+            display: flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.9rem;
+        }
+
+        /* 响应式适配 - 小屏设备自动恢复上下布局 */
+        @media (max-width: 768px) {
+            body {
+                padding-top: 100px;
+            }
+            html {
+                scroll-padding-top: 100px;
+            }
+            .container {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                text-align: center;
+                position: static;
+                margin-bottom: 2rem;
+            }
+            .profile-img {
+                margin: 0 auto 1.5rem auto;
+            }
+            nav ul {
+                gap: 0.8rem 1rem;
+                justify-content: center;
+            }
+            .publication-item {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            .publication-img {
+                width: 100%;
+                max-width: 300px;
+            }
+        }
+    </style>
+    <!-- 引入Font Awesome图标库 -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+    <!-- 顶部固定导航栏 -->
+    <nav>
+        <ul>
+            <li><a href="#home"><i class="fas fa-home"></i> Homepage</a></li>
+            <li><a href="#about"><i class="fas fa-user"></i> About Me</a></li>
+            <li><a href="#news"><i class="fas fa-newspaper"></i> News</a></li>
+            <li><a href="#publications"><i class="fas fa-file-alt"></i> Publications</a></li>
+            <li><a href="#honors"><i class="fas fa-award"></i> Honors and Awards</a></li>
+            <li><a href="#education"><i class="fas fa-graduation-cap"></i> Educations</a></li>
+            <li><a href="#internships"><i class="fas fa-briefcase"></i> Internships</a></li>
+        </ul>
+    </nav>
+
+    <!-- 主内容区 -->
+    <div class="container">
+        <!-- 左侧固定个人信息栏 - 已删除DBLP -->
+        <aside class="sidebar">
+            <img src="imag/Yufeng.png" alt="Profile Photo" class="profile-img">
+            <h1>Yufeng Wang</h1>
+            <p class="tagline">Embodied Intelligence & <br>Digital Fabrication & <br>Robotics & HCI & HRI</p>
+            <ul class="links">
+                <li><i class="fas fa-map-marker-alt"></i> Hangzhou</li>
+                <li><a href="mailto:wyufeng@zju.edu.cn"><i class="fas fa-envelope"></i> Email</a></li>
+                <li><a href="https://linkedin.com/in/yufeng-wang-0618yf"><i class="fab fa-linkedin"></i> LinkedIn</a></li>
+                <li><a href="https://github.com/wcsbsy111"><i class="fab fa-github"></i> Github</a></li>
+                <li><a href="https://scholar.google.com/citations?hl=zh-CN&user=WEjJEDUAAAAJ"><i class="fas fa-graduation-cap"></i> Google Scholar</a></li>
+                <li><a href="https://orcid.org/0009-0002-4824-6168"><i class="fas fa-id-card"></i> ORCID</a></li>
+            </ul>
+        </aside>
+
+        <!-- 右侧主体内容区 - 正常滚动 -->
+        <main class="content">
+            <p id="about">
+                I am currently a senior undergraduate student at the <a href="http://www.en.cs.zju.edu.cn/" target="_blank">College of Computer Science and Technology</a>, <a href="https://www.zju.edu.cn/english/" target="_blank">Zhejiang University</a>, majoring in <a href="https://design.zju.edu.cn/" target="_blank">Industrial Design</a>, with a minor in <a href="http://ckc.zju.edu.cn/ckcen/44633/list2.htm" target="_blank">Public Administration</a> at <a href="http://ckc.zju.edu.cn/ckcen/" target="_blank">Chu Kochen Honors College</a>. I will graduate in June 2026 with a Bachelor of Engineering (B.E.) degree. I am actively seeking RA, MPhil, or direct-PhD opportunities. If you are interested in my background, please feel free to contact me at <a href="mailto:wyufeng@zju.edu.cn">wyufeng@zju.edu.cn</a>.
+            </p>
+            <p>
+                My research interests are interdisciplinary, spanning design, computer science, and social sciences. I focus on Human-Computer Interaction (HCI), personal fabrication, and Human-Robot Interaction (HRI). I am particularly interested in developing interactive systems that bridge digital intelligence and physical experiences, with the goal of enabling users to create adaptive, intelligent, and personalized solutions for real-world applications.
+            </p>
+            <p>
+                I have published papers at top-tier conferences such as UIST and CHI, and I am eager to collaborate on new projects in these and related areas.
+            </p>
+
+
+            <!-- 新闻板块 - 新增折叠展开功能 -->
+            <h2 id="news">🔥 News</h2>
+            <ul class="news-list">
+                <!-- 默认显示的最新5条新闻 -->
+                <li>• 2026.02: ✈️ I will go to Barcelona on April 12 to attend the CHI conference and will stay there until April 19.</li>
+                <li>• 2026.01: 🎉 Our systemantic review of LLM-driven HRI is conditionally accepted by <a href="https://chi2026.acm.org/" target="_blank">CHI 2026</a>!</li>
+                <li>• 2025.01: 🥇 I get <a href="https://mp.weixin.qq.com/s/_HDckAAc0YIdE2XhqyB7FQ" target="_blank">Mogujie Fashion Design Fund Student Scholarship</a> && <a href="https://en.lingyinsi.org/detail_10630.html" target="_blank">Shang De Scholarship of Excellence</a>.</li>
+                <li>• 2025.10: 🥇 I get Zhejiang University Scholarship - First Prize on 2024 - 2025 (Top 3% of applications)!</li>
+                <li>• 2025.10: 🎉 My first paper GyFoam is finally published in <a href="https://uist.acm.org/uist2025/" target="_blank">UIST 2025</a>！</li>
+      
+                <!-- 超出5条的额外新闻，默认隐藏 -->
+                <div id="extra-news">
+                    <li>• 2025.09: 🥇 I get <a href="http://www.moe.gov.cn/jyb_xwfb/xw_zt/moe_357/jyzt_2015nztzl/2015_zt06/15zt06_gxzzzc/gxzz_bzks/201508/t20150810_199203.html" target="_blank">National Encouragement Scholarship</a>!</li>
+                    <li>• 2025.09: 🚶‍➡️ I successfully finishe the manuscript and make submission to <a href="https://chi2026.acm.org/" target="_blank">CHI 2026</a>.</li>
+                    <li>• 2025.07: 🎉 My first paper GyFoam was conditionally accepted by <a href="https://uist.acm.org/uist2025/" target="_blank">UIST 2025</a>!</li>
+                    <li>• 2024.12: 🎉 I got <a href="https://ugrs.zju.edu.cn/dwjlfwpt/2024/1220/c42841a3005352/page.htm" target="_blank">CSC scholarship</a> for summer research in <a href="https://www.ualberta.ca/" target="_blank">the University of Alberta</a>!</li>
+                    <li>• 2024.08: 🚶‍➡️ I will go to <a href="https://www.yonsei.ac.kr/en_sc/index.do" target="_blank">Yonsei University</a> for <a href="https://ca.yonsei.ac.kr/campus_asia/studentwork/2024.do?mode=view&articleNo=66281&article.offset=20&articleLimit=10" target="_blank">The 2024 Campus Asia Plus Summer Workshop</a>.</li>
+                </div>
+            </ul>
+            <!-- 展开/收起按钮 -->
+            <button id="toggle-news-btn">View All News</button>
+
+            <!-- 论文板块 -->
+            <h2 id="publications">📝 Publications</h2>
+            
+            <!-- Robotics -->
+            <h3 style="font-size: 1rem; font-weight: 600; margin: 1.5rem 0 1rem 0;">🤖 Robotics</h3>
+            
+            <!-- 论文条目1 -->
+            <div class="publication-item">
+                <img src="imag/LLM-HRI.png" alt="Paper Thumbnail" class="publication-img">
+                <div class="publication-content">
+                    <div class="publication-title">How Do We Research Human-Robot Interaction in the Age of Large Language Models? A Systematic Review.</div>
+                    <div class="publication-authors"><strong>Yufeng Wang</strong>*, Yuan Xu*, Anastasia Nikolova, Yuxuan Wang, Jianyu Wang, Chongyang Wang, and Xin Tong</div>
+                    <div class="publication-journal">In Proceedings of the 2026 CHI Conference on Human Factors in Computing Systems (CHI' 26)</div>
+                    <!-- 太长的摘要先注释掉
+                    <div class="publication-tags">
+                        <span class="publication-tag">IEEE-T-BME</span>
+                        <span class="publication-tag alt">ABS</span>
+                    </div>
+                    
+                    <div class="publication-abstract">
+                        <strong>Abstract:</strong> This study aims to identify non-restorative sleep (NRS) associated with depression using ambulatory electrocardiogram (ECG) and triaxial acceleration data. We collected physiological signals from normal subjects and patients with NRS, developed a novel feature extraction method, and built a machine learning model with high accuracy (92.3%) for NRS identification. The results demonstrate the potential of wearable devices for early detection of depression-related sleep disorders.
+                    </div>
+                    -->
+                    <div class="publication-links">
+                        <a href="https://www.arxiv.org/pdf/2602.15063" target="_blank"><i class="fas fa-file-pdf"></i> PDF</a>
+                        <a href="https://www.arxiv.org/abs/2602.15063" target="_blank"><i class="fas fa-external-link-alt"></i> Preprint Version</a>
+                        <a href="https://llms-hri.github.io/" target="_blank"><i class="fas fa-globe"></i> Online Database</a>
+                        <a href="https://github.com/llms-hri/llms-hri.github.io" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                        <!-- Citation和Code链接暂时没有，先注释掉
+                        <a href="#" target="_blank"><i class="fas fa-quote-right"></i> Citation</a>
+                        <a href="#" target="_blank"><i class="fas fa-code"></i> Code</a>
+                        -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- 论文条目2 -->
+            <!-- 暂时没有注释掉
+            <div class="publication-item">
+                <img src="https://picsum.photos/400/250" alt="Paper Thumbnail" class="publication-img">
+                <div class="publication-content">
+                    <div class="publication-title">FastSpeech: Fast, Robust and Controllable Text to Speech</div>
+                    <div class="publication-authors">Your Name, Yangjun Ruan, Xu Tan, Tao Qin, Sheng Zhao, Zhou Zhao, Tie-Yan Liu</div>
+                    <div class="publication-journal">NeurIPS 2019 (Neural Information Processing Systems)</div>
+                    
+                    <div class="publication-tags">
+                        <span class="publication-tag">NeurIPS 2019</span>
+                        <span class="publication-tag alt">Oral</span>
+                    </div>
+                    
+                    <div class="publication-abstract">
+                        <strong>Abstract:</strong> FastSpeech is the first fully parallel end-to-end speech synthesis model that generates mel-spectrograms in real-time. Compared with autoregressive models like Tacotron 2, FastSpeech achieves a 270x speed-up in inference while maintaining high speech quality and controllability of speech speed, pitch, and volume. This work has been cited over 1600 times and has become a foundational model in the TTS field.
+                    </div>
+                    
+                    <div class="publication-links">
+                        <a href="#" target="_blank"><i class="fas fa-file-pdf"></i> PDF</a>
+                        <a href="#" target="_blank"><i class="fas fa-globe"></i> Project Page</a>
+                        <a href="#" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                        <a href="#" target="_blank"><i class="fas fa-chart-line"></i> Citations: 1629</a>
+                    </div>
+                </div>
+            </div>
+            -->
+
+            <!-- Digital Fabrication -->
+            <h3 style="font-size: 1rem; font-weight: 600; margin: 2rem 0 1rem 0;">🫳 Digital Fabrication</h3>
+            <div class="publication-item">
+                <img src="imag/GyFoam.png" alt="Paper Thumbnail" class="publication-img">
+                <div class="publication-content">
+                    <div class="publication-title">GyFoam: Fabricating Lattice Foam with Customizable Stiffness through Uniform Expansion</div>
+                    <div class="publication-authors">Guanyun Wang, Haotian Chen, <strong>Yufeng Wang</strong>, Songyun Li, Yue Tao, Fanke Qi, Lizhuo Cao, Xiao Jin, Ye Tao, and Jiaji Li</div>
+                    <div class="publication-journal">In The 38th Annual ACM Symposium on User Interface Software and Technology (UIST' 25)</div>
+                    <!-- 暂时没有注释掉
+                    <div class="publication-tags">
+                        <span class="publication-tag">UIST 2025</span>
+                    </div>
+                    
+                    <div class="publication-abstract">
+                        <strong>Abstract:</strong> This work presents a one-shot realistic 3D talking portrait synthesis framework, which achieves high-fidelity audio-driven 3D face animation with accurate lip sync, natural head motion and realistic rendering. The model outperforms existing state-of-the-art methods in both quantitative metrics and human evaluation, and has been deployed in multiple real-world applications.
+                    </div>
+                    -->
+                    <div class="publication-links">
+                        <a href="https://dl.acm.org/doi/epdf/10.1145/3746059.3747785" target="_blank"><i class="fas fa-file-pdf"></i> PDF</a>
+                        <a href="https://gyfoam.github.io/" target="_blank"><i class="fas fa-globe"></i> Project Page</a>
+                        <a href="https://github.com/GyFoam/GyFoam.github.io" target="_blank"><i class="fab fa-github"></i> GitHub</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 荣誉奖项板块 -->
+            <h2 id="honors">🎖 Honors and Awards</h2>
+            <ul class="info-list">
+                <!-- 默认显示的前5个奖项 -->
+                <li>• Zhejiang University Scholarship - First Prize (Top 3% of applicants), Zhejiang University, 2023 & 2025</li>
+                <li>• Zhejiang University Scholarship - Second Prize (Top 8% of applicants), Zhejiang University, 2024</li>
+                <li>• Zhejiang University Industrial Design Competition - First Prize (Rank Top 1), Zhejiang University, 2024</li>
+                <li>• Zhejiang International College Students' Innovation Competition - Second Prize (Rank Top 2), Organising Committee of Innovation and Entrepreneurship Competition for College Students in Zhejiang Province, 2024</li>
+                <li>• Outstanding Student, Zhejiang University, 2023 & 2024 & 2025</li>
+                
+                <!-- 超出5个的额外奖项，默认隐藏 -->
+                <div id="extra-honors">
+                    <li>• National Encouragement Scholarship, China, 2023 & 2024 & 2025</li>
+                    <li>• Five-Star Volunteer, Zhejiang University, 2024</li>
+                    <li>• Academic Excellence Award (Top 30% of applicants), Zhejiang University, 2023 & 2024 & 2025</li>
+                    <li>• Student Leadership Award, Zhejiang University, 2023 & 2025</li>
+                    <li>• Zhejiang University × NetEase Joint Course - Excellent Design Award, NetEase, 2024</li>
+                    <li>• Campus Asia Social Design Workshop - Most Inspiring Design Award, ZJU & Chiba U & Yonsei U, 2024</li>
+                    <li>• Energy Conservation and Emission Reduction Competition - Third Prize, Zhejiang University, 2025</li>
+                    <li>• Mogujie Fashion Design Fund Student Scholarship - Second Prize, College of Computer Science and Technology & Zhejiang University Education Foundation, 2025</li>
+                    <li>• Student Innovation and Entrepreneurship Award, Zhejiang University, 2023 & 2025</li>
+                    <li>• Student Volunteer Award, Zhejiang University, 2024</li>
+                    <li>• Zhejiang University Alumni Heartfelt Scholarship, Zhejiang University Education Foundation, 2024</li>
+                    <li>• Shang De Scholarship of Excellence, Yunlin Charitable Foundation at Lingyin Temple, 2025</li>
+                    <li>• National English Translate Competition for College Students - Second Prize, IATEFL TEFL China, 2022</li>
+                </div>
+            </ul>
+            <!-- 展开/收起按钮 -->
+            <button id="toggle-honors-btn">View All Awards</button>
+
+            <!-- 教育经历板块 -->
+            <h2 id="education">📖 Educations</h2>
+            <ul class="info-list">
+                <li>• 2022.08 - 2026.06, Undergraduate, College of Computer Science and Technology & Chu Kochen Honors College.</li>
+            </ul>
+
+            <!-- 实习经历板块 -->
+            <h2 id="internships">💻 Internships</h2>
+            <ul class="info-list">
+                <li>• 2025.06 - 2025.09, <a href="https://arkxlab.github.io/">ARK Lab</a>, The Hong Kong University of Science and Technology (Guangzhou), supervised by <a href="https://facultyprofiles.hkust-gz.edu.cn/faculty-personal-page?id=435">Prof. Tong Xin</a> and <a href="https://wangchongyang.ai/">Prof. Chongyang Wang</a>.</li>
+                <li>• 2024.03 - 2025.05, <a href="https://design.zju.edu.cn/guanyunlab/">Guanyun Lab</a>, Zhejiang University, supervised by <a href="https://person.zju.edu.cn/en/guanyun">Prof. Guanyun Wang</a>.</li>
+            </ul>
+
+        </main>
+    </div>
+
+    <!-- 新闻和奖项展开收起功能JS -->
+    <script>
+        // 处理新闻展开收起
+        const toggleNewsBtn = document.getElementById('toggle-news-btn');
+        const extraNews = document.getElementById('extra-news');
+        let newsExpanded = false;
+
+        // 智能判断：如果没有额外新闻，隐藏按钮
+        if (extraNews.children.length === 0) {
+            toggleNewsBtn.style.display = 'none';
+        }
+
+        // 点击切换展开/收起
+        toggleNewsBtn.addEventListener('click', () => {
+            newsExpanded = !newsExpanded;
+            if (newsExpanded) {
+                extraNews.style.display = 'block';
+                toggleNewsBtn.textContent = 'Collapse';
+            } else {
+                extraNews.style.display = 'none';
+                toggleNewsBtn.textContent = 'View All News';
+                // 收起后自动滚动回新闻板块顶部
+                document.getElementById('news').scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+
+        // 处理奖项展开收起
+        const toggleHonorsBtn = document.getElementById('toggle-honors-btn');
+        const extraHonors = document.getElementById('extra-honors');
+        let honorsExpanded = false;
+
+        // 智能判断：如果没有额外奖项，隐藏按钮
+        if (extraHonors.children.length === 0) {
+            toggleHonorsBtn.style.display = 'none';
+        }
+
+        // 点击切换展开/收起
+        toggleHonorsBtn.addEventListener('click', () => {
+            honorsExpanded = !honorsExpanded;
+            if (honorsExpanded) {
+                extraHonors.style.display = 'block';
+                toggleHonorsBtn.textContent = 'Collapse';
+            } else {
+                extraHonors.style.display = 'none';
+                toggleHonorsBtn.textContent = 'View All Awards';
+                // 收起后自动滚动回奖项板块顶部
+                document.getElementById('honors').scrollIntoView({ behavior: 'smooth' });
+            }
+        });
+    </script>
+</body>
+</html>
